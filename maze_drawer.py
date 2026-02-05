@@ -1,9 +1,13 @@
+from mazegen import MazeGenerator
+
+maze = MazeGenerator.generate
+
 
 class MazeDrawer:
-    def __init__(self, maze, solution_path):
+    def __init__(self, maze):
         self.maze = maze
-        self.solution_path = solution_path
 
+    # Draw part here
     def draw(self):
         print(" " + "_" * (self.maze.width * 2 - 1))
 
@@ -23,3 +27,16 @@ class MazeDrawer:
 
                 line += body + side
             print(line)
+
+    # Solve prototype
+    def solve(self) -> str:
+        pass
+
+    def show_path(self) -> None:
+        pass
+
+    def rotate_colors(self) -> None:
+        pass
+
+
+draw = MazeDrawer(maze)
