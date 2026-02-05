@@ -1,3 +1,4 @@
+
 class MazeDrawer:
     def __init__(self, maze, solution_path):
         self.maze = maze
