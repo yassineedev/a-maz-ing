@@ -8,37 +8,56 @@ class MazeDrawer:
         self.maze = maze
 
     # Draw part here
-    def draw(self):
-        print("╔" + "══" * self.maze.width + "╗")
+    # def draw(self):
+    #     print(" " + "_" * (self.maze.width * 2 - 1))
 
-        for y in range(self.maze.height):
-            # ── Cell content + vertical walls ──
-            line = "║"
-            for x in range(self.maze.width):
+    #     for y in range(self.maze.height):
+    #         line = "║"
+    #         for x in range(self.maze.width):
+    #             cell = self.maze.grid[y][x]
+
+    #             if cell.is_start:
+    #                 body = "S"
+    #             elif cell.is_end:
+    #                 body = "E"
+    #             else:
+    #                 body = " " if not cell.down else "═"
+
+    #             side = " " if not cell.right else "|"
+
+    #             line += body + side
+    #         print(line)
+
+    def draw(self):
+        width = self.maze.width
+        height = self.maze.height
+
+        # TOP BORDER
+        print("+" + "---+" * width)
+
+        for y in range(height):
+            # CELL CONTENT ROW
+            line = "|"
+            for x in range(width):
                 cell = self.maze.grid[y][x]
 
                 if cell.is_start:
-                    body = "S"
+                    content = " S "
                 elif cell.is_end:
-                    body = "E"
+                    content = " E "
                 else:
-                    body = " "
+                    content = " . "
 
-                side = "║" if cell.right else " "
-                line += body + side
+                line += content
+                line += "|" if cell.right else " "
             print(line)
 
-            # ── Bottom walls ──
-            line = "╠"
-            for x in range(self.maze.width):
+
+            line = "+"
+            for x in range(width):
                 cell = self.maze.grid[y][x]
-                bottom = "══" if cell.down else "  "
-                line += bottom
-            line += "╣"
+                line += "---+" if cell.down else "   +"
             print(line)
-
-        # Bottom border
-        print("╚" + "══" * self.maze.width + "╝")
 
     # Solve prototype
     def solve(self) -> str:
