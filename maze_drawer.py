@@ -1,4 +1,5 @@
 from mazegen import MazeGenerator
+import time
 
 maze = MazeGenerator.generate
 
@@ -11,7 +12,7 @@ class MazeDrawer:
         width = self.maze.width
         height = self.maze.height
 
-        print("█" + "▀" * (cell_size + 1) * width)
+        print("▄" + "▄" * (cell_size + 1) * width)
 
         for y in range(height):
             line = "█"
@@ -27,6 +28,7 @@ class MazeDrawer:
 
                 wall = "█" if cell.right else " "
                 line += content + wall
+                time.sleep(0.004)
             print(line)
 
             line = "█"
@@ -35,6 +37,7 @@ class MazeDrawer:
                 floor = "▄" * cell_size if cell.down else " " *cell_size
                 wall = "█" if cell.right else "▄"
                 line += floor + wall
+                time.sleep(0.004)
             print(line)
 
 
