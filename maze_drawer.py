@@ -7,57 +7,36 @@ class MazeDrawer:
     def __init__(self, maze):
         self.maze = maze
 
-    # Draw part here
-    # def draw(self):
-    #     print(" " + "_" * (self.maze.width * 2 - 1))
-
-    #     for y in range(self.maze.height):
-    #         line = "║"
-    #         for x in range(self.maze.width):
-    #             cell = self.maze.grid[y][x]
-
-    #             if cell.is_start:
-    #                 body = "S"
-    #             elif cell.is_end:
-    #                 body = "E"
-    #             else:
-    #                 body = " " if not cell.down else "═"
-
-    #             side = " " if not cell.right else "|"
-
-    #             line += body + side
-    #         print(line)
-
-    def draw(self):
+    def draw(self, cell_size=3):
         width = self.maze.width
         height = self.maze.height
 
-        # TOP BORDER
-        print("+" + "---+" * width)
+        print("█" + "▀" * (cell_size + 1) * width)
 
         for y in range(height):
-            # CELL CONTENT ROW
-            line = "|"
+            line = "█"
             for x in range(width):
                 cell = self.maze.grid[y][x]
 
                 if cell.is_start:
-                    content = " S "
+                    content = " S " .center(cell_size)
                 elif cell.is_end:
-                    content = " E "
+                    content = " E ".center(cell_size)
                 else:
-                    content = " . "
+                    content = " " * cell_size
 
-                line += content
-                line += "|" if cell.right else " "
+                wall = "█" if cell.right else " "
+                line += content + wall
             print(line)
 
-
-            line = "+"
+            line = "█"
             for x in range(width):
                 cell = self.maze.grid[y][x]
-                line += "---+" if cell.down else "   +"
+                floor = "▄" * cell_size if cell.down else " " *cell_size
+                wall = "█" if cell.right else "▄"
+                line += floor + wall
             print(line)
+
 
     # Solve prototype
     def solve(self) -> str:
