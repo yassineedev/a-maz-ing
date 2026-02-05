@@ -24,7 +24,7 @@ def main() -> None:
     solver = MazeSolver(maze)
     solution_path = solver.solve()
 
-    drawer = MazeDrawer(maze, solution_path)
+    drawer = MazeDrawer(maze)
     drawer.draw()
 
 

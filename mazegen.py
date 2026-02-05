@@ -24,7 +24,6 @@ class MazeGenerator:
     def __init__(self, config, algorithm):
         self.config = config
         self.algorithm = algorithm
-        
         self.WIDTH = 10
         self.HEIGHT = 10
         self.ENTRY = (0, 0)

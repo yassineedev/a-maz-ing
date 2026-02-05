@@ -9,10 +9,11 @@ class MazeDrawer:
 
     # Draw part here
     def draw(self):
-        print(" " + "_" * (self.maze.width * 2 - 1))
+        print("╔" + "══" * self.maze.width + "╗")
 
         for y in range(self.maze.height):
-            line = "|"
+            # ── Cell content + vertical walls ──
+            line = "║"
             for x in range(self.maze.width):
                 cell = self.maze.grid[y][x]
 
@@ -21,12 +22,23 @@ class MazeDrawer:
                 elif cell.is_end:
                     body = "E"
                 else:
-                    body = " " if not cell.down else "_"
+                    body = " "
 
-                side = " " if not cell.right else "|"
-
+                side = "║" if cell.right else " "
                 line += body + side
             print(line)
+
+            # ── Bottom walls ──
+            line = "╠"
+            for x in range(self.maze.width):
+                cell = self.maze.grid[y][x]
+                bottom = "══" if cell.down else "  "
+                line += bottom
+            line += "╣"
+            print(line)
+
+        # Bottom border
+        print("╚" + "══" * self.maze.width + "╝")
 
     # Solve prototype
     def solve(self) -> str:
@@ -37,6 +49,3 @@ class MazeDrawer:
 
     def rotate_colors(self) -> None:
         pass
-
-
-draw = MazeDrawer(maze)
