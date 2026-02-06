@@ -3,7 +3,8 @@ from config_parser import load_config, ConfigError
 from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
 from solver import MazeSolver
-
+from mazegen_algorithm import DFS, Prim
+import curses
 
 def main() -> None:
     if len(sys.argv) != 2:
@@ -11,22 +12,24 @@ def main() -> None:
         sys.exit(1)
 
     try:
+        # ------- Mohamed --------
         config = load_config(sys.argv[1])
+        generator = MazeGenerator(config)
+        maze = generator.generate(DFS())
+
+        # ------- Yassen --------
+        solver = MazeSolver(maze)
+        solution_path = solver.solve()
+        drawer = MazeDrawer(maze)
+        drawer.draw()
+
     except ConfigError as e:
         print(f"Config error: {e}")
         sys.exit(1)
-
-    # ------- Mohamed --------
-    generator = MazeGenerator(config, "dfs")
-    maze = generator.generate()
-
-    # ------- Yassen --------
-    solver = MazeSolver(maze)
-    solution_path = solver.solve()
-
-    drawer = MazeDrawer(maze, solution_path)
-    drawer.draw()
-
+    except Exception as e:
+        print(f"[ERROR]: {e}")
+        sys.exit(1)
+        
 
 if __name__ == "__main__":
     main()

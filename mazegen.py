@@ -1,94 +1,46 @@
 import random
 from maze import Maze
+# from mazegen_algorithm import MazeAlgorithm
+from pattern_42 import is_pattern_42
+import curses
+from config_parser import ConfigError
 
 
 class Cell:
     def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
+        self.x, self.y = x, y
+        self.up = self.down = self.left = self.right = True
+        self.is_start = self.is_end = self.visited = False
+        self.path_42 = False
 
-        self.up = True
-        self.down = True
-        self.left = True
-        self.right = True
-
-        self.is_start = False
-        self.is_end = False
-        self.visited = False
 
     def __str__(self):
         return " " if not self.down else "_"
 
 
 class MazeGenerator:
-    def __init__(self, config, algorithm):
+    from mazegen_algorithm import MazeAlgorithm
+    def __init__(self, config):
         self.config = config
-        self.algorithm = algorithm
-        
-        self.WIDTH = 10
-        self.HEIGHT = 10
-        self.ENTRY = (0, 0)
-        self.EXIT = (9, 9)
 
-        self.grid = [
-            [Cell(x, y) for x in range(self.WIDTH)]
-            for y in range(self.HEIGHT)
+    def generate(self, algorithm: MazeAlgorithm):
+        grid = [
+            [Cell(x, y) for x in range(self.config.width)]
+            for y in range(self.config.height)
         ]
+        if self.config.width < 8 or self.config.height < 6:
+            print("Error: Maze too small for the 42 pattern.")
+        else:
+             is_pattern_42(grid, self.config)
+        
 
-    def research_about_neighbor(self, cell) -> list[Cell]:
-        neighbors = []
+        sx, sy = self.config.entry
+        grid[sy][sx].is_start = True
 
-        cx, cy = cell.x, cell.y
-        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+        algorithm.apply(grid, self.config)
 
-        for dx, dy in directions:
-            nx, ny = cx + dx, cy + dy
+        ex, ey = self.config.exit
+        grid[ey][ex].is_end = True
 
-            if 0 <= nx < self.WIDTH and 0 <= ny < self.HEIGHT:
-                n = self.grid[ny][nx]
-                if not n.visited:
-                    neighbors.append(n)
-
-        return neighbors
-
-    def generate(self):
-        stack: list[Cell] = []
-
-        sx, sy = self.ENTRY
-        start = self.grid[sy][sx]
-        start.visited = True
-        start.is_start = True
-
-        stack.append(start)
-
-        while stack:
-            cell = stack[-1]
-            neighbors = self.research_about_neighbor(cell)
-
-            if not neighbors:
-                stack.pop()
-                continue
-
-            neighbor = random.choice(neighbors)
-            neighbor.visited = True
-
-            if neighbor.x > cell.x:
-                cell.right = False
-                neighbor.left = False
-            elif neighbor.x < cell.x:
-                cell.left = False
-                neighbor.right = False
-            elif neighbor.y > cell.y:
-                cell.down = False
-                neighbor.up = False
-            elif neighbor.y < cell.y:
-                cell.up = False
-                neighbor.down = False
-
-            stack.append(neighbor)
-
-        ex, ey = self.EXIT
-        self.grid[ey][ex].is_end = True
-
-        maze = Maze(self.WIDTH, self.HEIGHT, self.grid)
+        maze = Maze(self.config.width, self.config.height, grid)
         return maze

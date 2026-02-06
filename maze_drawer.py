@@ -1,32 +1,44 @@
-from mazegen import MazeGenerator
-
-maze = MazeGenerator.generate
+import time
 
 
 class MazeDrawer:
     def __init__(self, maze):
         self.maze = maze
 
-    # Draw part here
-    def draw(self):
-        print(" " + "_" * (self.maze.width * 2 - 1))
+    def draw(self, cell_size=3):
+        width = self.maze.width
+        height = self.maze.height
 
-        for y in range(self.maze.height):
-            line = "|"
-            for x in range(self.maze.width):
+        print("▄" + "▄" * (cell_size + 1) * width)
+
+        for y in range(height):
+            line = "█"
+            for x in range(width):
                 cell = self.maze.grid[y][x]
 
                 if cell.is_start:
-                    body = "S"
+                    content = " S " .center(cell_size)
                 elif cell.is_end:
-                    body = "E"
+                    content = " E ".center(cell_size)
+                elif cell.path_42:
+                    content = "x".center(cell_size)
                 else:
-                    body = " " if not cell.down else "_"
+                    content = " " * cell_size
 
-                side = " " if not cell.right else "|"
-
-                line += body + side
+                wall = "█" if cell.right else " "
+                line += content + wall
+                time.sleep(0.004)
             print(line)
+
+            line = "█"
+            for x in range(width):
+                cell = self.maze.grid[y][x]
+                floor = "▄" * cell_size if cell.down else " " *cell_size
+                wall = "█" if cell.right else "▄"
+                line += floor + wall
+                time.sleep(0.004)
+            print(line)
+
 
     # Solve prototype
     def solve(self) -> str:
@@ -37,6 +49,3 @@ class MazeDrawer:
 
     def rotate_colors(self) -> None:
         pass
-
-
-draw = MazeDrawer(maze)
