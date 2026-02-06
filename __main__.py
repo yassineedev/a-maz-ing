@@ -2,31 +2,26 @@ import sys
 from config_parser import load_config, ConfigError
 from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
-from solver import MazeSolver
+# from solver import MazeSolver
+from curses import wrapper
 
 
-def main() -> None:
-    if len(sys.argv) != 2:
-        print("Usage: python3 a_maze_ing.py <config_file>")
-        sys.exit(1)
 
-    try:
-        config = load_config(sys.argv[1])
-    except ConfigError as e:
-        print(f"Config error: {e}")
-        sys.exit(1)
+def main(stdscr) -> None:
+    # ... (Keep your config and generation logic above) ...
 
-    # ------- Mohamed --------
-    generator = MazeGenerator(config, "dfs")
+    generator = MazeGenerator(sys.argv, "dfs")
     maze = generator.generate()
 
-    # ------- Yassen --------
-    solver = MazeSolver(maze)
-    solution_path = solver.solve()
+    # 1. Create the drawer ONCE
+    drawer = MazeDrawer(maze, stdscr)
 
-    drawer = MazeDrawer(maze)
-    drawer.draw()
+    while True:
+        drawer.draw()
+        key = stdscr.getch()
+        if key == ord('q'):
+            break
 
 
 if __name__ == "__main__":
-    main()
+    wrapper(main)

@@ -5,41 +5,21 @@ maze = MazeGenerator.generate
 
 
 class MazeDrawer:
-    def __init__(self, maze):
+    def __init__(self, maze, stdscr):
         self.maze = maze
+        self.stdscr = stdscr
 
-    def draw(self, cell_size=3):
-        width = self.maze.width
-        height = self.maze.height
-
-        print("▄" + "▄" * (cell_size + 1) * width)
-
+    def draw(self, cell_size=2):
+        self.stdscr.clear()
+        height, width = self.stdscr.getmaxyx()
+        cell_size = 3
+        yy, x_ = 20, 30
+        chars = x_ * cell_size + 1
+        self.stdscr.addstr(0, 0, "█" * chars)
         for y in range(height):
             line = "█"
-            for x in range(width):
-                cell = self.maze.grid[y][x]
-
-                if cell.is_start:
-                    content = " S " .center(cell_size)
-                elif cell.is_end:
-                    content = " E ".center(cell_size)
-                else:
-                    content = " " * cell_size
-
-                wall = "█" if cell.right else " "
-                line += content + wall
-                time.sleep(0.004)
-            print(line)
-
-            line = "█"
-            for x in range(width):
-                cell = self.maze.grid[y][x]
-                floor = "▄" * cell_size if cell.down else " " *cell_size
-                wall = "█" if cell.right else "▄"
-                line += floor + wall
-                time.sleep(0.004)
-            print(line)
-
+            
+        self.stdscr.refresh()
 
     # Solve prototype
     def solve(self) -> str:
