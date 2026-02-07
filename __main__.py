@@ -10,13 +10,13 @@ from curses import wrapper
 def main(stdscr) -> None:
     # ... (Keep your config and generation logic above) ...
 
-    generator = MazeGenerator(sys.argv, "dfs")
-    maze = generator.generate()
 
     # 1. Create the drawer ONCE
-    drawer = MazeDrawer(maze, stdscr)
 
     while True:
+        generator = MazeGenerator(sys.argv, "dfs")
+        maze = generator.generate()
+        drawer = MazeDrawer(maze, stdscr)
         drawer.draw()
         key = stdscr.getch()
         if key == ord('q'):
