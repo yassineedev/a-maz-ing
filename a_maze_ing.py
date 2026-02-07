@@ -4,7 +4,7 @@ from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
 from solver import MazeSolver
 from mazegen_algorithm import DFS, Prim
-import curses
+from hex_encoder import hex_encoder
 
 def main() -> None:
     if len(sys.argv) != 2:
@@ -15,11 +15,13 @@ def main() -> None:
         # ------- Mohamed --------
         config = load_config(sys.argv[1])
         generator = MazeGenerator(config)
-        maze = generator.generate(DFS())
+        maze = generator.generate(Prim())
+        
 
         # ------- Yassen --------
         solver = MazeSolver(maze)
         solution_path = solver.solve()
+        hex_encoder(maze, config, solution_path)
         drawer = MazeDrawer(maze)
         drawer.draw()
 

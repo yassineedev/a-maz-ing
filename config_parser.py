@@ -28,9 +28,13 @@ def load_config(config_file):
             key = key.strip().lower()
             value = value.strip()
             if key == "width":
-                    value = int(value)
+                value = int(value)
+                if value > 100:
+                     raise ConfigError("max of widthe is '100'")
             if key == "height":
                  value = int(value)
+                 if value > 100:
+                     raise ConfigError("max of height is '100'")
             if key == "entry" or key == "exit":
                  vx, vy = value.split(",")
                  value = (int(vx), int(vy))

@@ -71,10 +71,3 @@ class Prim(MazeAlgorithm):
 
             for n in self._get_unvisited_neighbors(grid, neighbor, config):
                 frontiers.append((neighbor, n))
-
-
-    #frontiers: list[(cell, cell)] ---> (inside_cell, outside_cell)
-    #cell, neighbor = random.choicet(frontiers)
-    #_remove_wall(a, b)
-    #(frontier_inside, frontier_outside)
-    #boundaries

@@ -27,7 +27,7 @@ class MazeDrawer:
 
                 wall = "█" if cell.right else " "
                 line += content + wall
-                time.sleep(0.004)
+                time.sleep(0.0004)
             print(line)
 
             line = "█"
@@ -36,7 +36,7 @@ class MazeDrawer:
                 floor = "▄" * cell_size if cell.down else " " *cell_size
                 wall = "█" if cell.right else "▄"
                 line += floor + wall
-                time.sleep(0.004)
+                time.sleep(0.0004)
             print(line)
 
 
