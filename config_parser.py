@@ -9,7 +9,7 @@ class MazeConfig():
         self.entry = None
         self.exit = None
         self.output_file = None
-        self.perfect = None
+        self.perfect = True
 
 def load_config(config_file):
     config_data = MazeConfig()
@@ -39,7 +39,9 @@ def load_config(config_file):
                  vx, vy = value.split(",")
                  value = (int(vx), int(vy))
             if key == "perfect":
-                 if value != "True" and value != "False":
+                 if value == "True": value = True
+                 elif value == "False": value = False
+                 else:
                       raise ConfigError("perfect acsipt jast True or False")
             setattr(config_data, key, value)
     return config_data

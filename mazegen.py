@@ -2,6 +2,7 @@ import random
 from maze import Maze
 # from mazegen_algorithm import MazeAlgorithm
 from pattern_42 import is_pattern_42
+from mazegennotperfect import convert_to_imperfect_maze
 
 class Cell:
     def __init__(self, x: int, y: int):
@@ -29,17 +30,13 @@ class MazeGenerator:
             print("Error: Maze too small for the 42 pattern.")
         else:
              is_pattern_42(grid, self.config)
-        
 
         sx, sy = self.config.entry
         grid[sy][sx].is_start = True
 
         algorithm.apply(grid, self.config)
         if not self.config.perfect:
-            for row in grid:
-               cell = random.choice(row)
-               if self.config.height > cell.lift > 0 and cell.lift == False:
-                    cell.lift = True
+            convert_to_imperfect_maze(grid, self.config)
 
         ex, ey = self.config.exit
         grid[ey][ex].is_end = True

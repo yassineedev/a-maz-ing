@@ -15,7 +15,7 @@ def main() -> None:
         # ------- Mohamed --------
         config = load_config(sys.argv[1])
         generator = MazeGenerator(config)
-        maze = generator.generate(Prim())
+        maze = generator.generate(DFS())
         
 
         # ------- Yassen --------
