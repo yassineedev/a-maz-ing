@@ -1,23 +1,23 @@
 import sys
-from config_parser import load_config, ConfigError
+# from config_parser import load_config, ConfigError
 from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
-# from solver import MazeSolver
 from curses import wrapper
-
+import time
 
 
 def main(stdscr) -> None:
-    # ... (Keep your config and generation logic above) ...
+    generator = MazeGenerator(sys.argv, "dfs")
+    maze = generator.generate_closed_maze()
+    drawer = MazeDrawer(maze, stdscr)
+    drawer.draw()
+    time.sleep(0.5)
 
-
-    # 1. Create the drawer ONCE
+    for _ in generator.generate_steps():
+        drawer.draw()
+        time.sleep(0.05)
 
     while True:
-        generator = MazeGenerator(sys.argv, "dfs")
-        maze = generator.generate()
-        drawer = MazeDrawer(maze, stdscr)
-        drawer.draw()
         key = stdscr.getch()
         if key == ord('q'):
             break
