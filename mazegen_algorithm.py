@@ -49,13 +49,13 @@ class DFS(MazeAlgorithm):
             self._remove_walls(cell, neighbor)
             neighbor.visited = True
             stack.append(neighbor)
-
+            yield grid
 # ----- this is the sacant algorithem ----
 class Prim(MazeAlgorithm):
     def apply(self, grid, config):
         frontiers = []
         sx, sy = config.entry
-        start = grid[sx][sy]
+        start = grid[sy][sx]
 
         for n in self._get_unvisited_neighbors(grid, start, config):
             frontiers.append((start, n))
@@ -71,3 +71,4 @@ class Prim(MazeAlgorithm):
 
             for n in self._get_unvisited_neighbors(grid, neighbor, config):
                 frontiers.append((neighbor, n))
+            yield grid

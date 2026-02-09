@@ -44,3 +44,4 @@ def convert_to_imperfect_maze(grid, config, chance=0.5):
             neighbors = get_valid_neighbors(grid, cell, config)
             if neighbors:
                 break_wall(cell, random.choice(neighbors))
+                yield grid
