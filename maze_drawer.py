@@ -1,7 +1,5 @@
-from mazegen import MazeGenerator, Cell
+from mazegen import Cell
 import curses
-
-maze = MazeGenerator.generate_steps
 
 
 class MazeDrawer:
@@ -35,11 +33,11 @@ class MazeDrawer:
                         self.stdscr.addstr(cy, cx, "▀", curses.color_pair(1))
 
                     if y == self.maze.height - 1:
-                        self.stdscr.addstr(cy + 2, cx, "▀▀▀▀", curses.color_pair(1))
+                        self.stdscr.addstr(cy + 2, cx , "▀▀▀▀▀", curses.color_pair(1))
                     if cell.right and x == self.maze.width - 1:
-                        self.stdscr.addstr(cy, cx + 3, "▀", curses.color_pair(1))
+                        self.stdscr.addstr(cy, cx + 4, "█", curses.color_pair(1))
                     if cell.left:
-                        self.stdscr.addstr(cy , cx, "█", curses.color_pair(1))
+                        self.stdscr.addstr(cy, cx, "█", curses.color_pair(1))
                         self.stdscr.addstr(cy + 1, cx, "█", curses.color_pair(1))
                         if cell.is_start:
                             self.stdscr.addstr(
