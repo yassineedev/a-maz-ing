@@ -31,19 +31,12 @@ class MazeGenerator:
             yield from convert_to_imperfect_maze(self.grid, self.config)
 
         ex, ey = self.config.exit
-        self.grid[ey][ex].is_end = True
+        self.grid[ex][ey].is_end = True
     def prepare_maze(self) -> None:
-        """
-        Initialize the maze grid BEFORE generation.
-        All cells are unvisited and all walls are closed.
-        Marks ENTRY and EXIT.
-        """
         self.grid = [
             [Cell(x, y) for x in range(self.config.width)]
             for y in range(self.config.height)
         ]
-
-        # Reset walls & visited for each cell
         for row in self.grid:
             for cell in row:
                 cell.up = True
@@ -53,8 +46,8 @@ class MazeGenerator:
                 cell.visited = False
                 cell.is_start = False
                 cell.is_end = False
+                cell.path_42 = False
 
-        # Mark the start and end
         sx, sy = self.config.entry
         self.grid[sy][sx].is_start = True
 

@@ -8,7 +8,7 @@ class MazeAlgorithm(ABC):
     def apply(self, grid: list[list[Cell]], config) -> None:
         pass
 
-    def _get_unvisited_neighbors(self, grid, cell, config):
+    def get_unvisited_neighbors(self, grid, cell, config):
         neighbors = []
         cx, cy = cell.x, cell.y
         directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
@@ -23,7 +23,7 @@ class MazeAlgorithm(ABC):
 
         return neighbors
 
-    def _remove_walls(self, a, b):
+    def remove_walls(self, a, b):
         if a.x < b.x: a.right = b.left = False
         elif a.x > b.x: a.left = b.right = False
         elif a.y < b.y: a.down = b.up = False
@@ -31,7 +31,7 @@ class MazeAlgorithm(ABC):
 
 # ----- this is the first algorithem ----
 class DFS(MazeAlgorithm):
-    def apply(self, grid: list[list[Cell]], config) -> None:
+    def apply(self, grid: list[list[Cell]], config):
         stack: list[Cell] = []
         sx, sy = config.entry
         start = grid[sy][sx]
@@ -40,13 +40,13 @@ class DFS(MazeAlgorithm):
 
         while stack:
             cell = stack[-1]
-            neighbors = self._get_unvisited_neighbors(grid, cell, config)
+            neighbors = self.get_unvisited_neighbors(grid, cell, config)
             if not neighbors:
                 stack.pop()
                 continue
 
             neighbor = random.choice(neighbors)
-            self._remove_walls(cell, neighbor)
+            self.remove_walls(cell, neighbor)
             neighbor.visited = True
             stack.append(neighbor)
             yield grid
@@ -57,7 +57,7 @@ class Prim(MazeAlgorithm):
         sx, sy = config.entry
         start = grid[sy][sx]
 
-        for n in self._get_unvisited_neighbors(grid, start, config):
+        for n in self.get_unvisited_neighbors(grid, start, config):
             frontiers.append((start, n))
         while frontiers:
             cell, neighbor = random.choice(frontiers)
@@ -66,9 +66,9 @@ class Prim(MazeAlgorithm):
             if neighbor.visited:
                 continue
 
-            self._remove_walls(cell, neighbor)
+            self.remove_walls(cell, neighbor)
             neighbor.visited = True
 
-            for n in self._get_unvisited_neighbors(grid, neighbor, config):
+            for n in self.get_unvisited_neighbors(grid, neighbor, config):
                 frontiers.append((neighbor, n))
             yield grid
