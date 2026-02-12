@@ -50,9 +50,9 @@ def break_wall(a, b):
     elif a.y > b.y: a.up = b.down = False
 
 
-def convert_to_imperfect_maze(grid, config, iterations=100):
-
-    for _ in range(iterations):
+def convert_to_imperfect_maze(grid, config):
+    len_rep = int(len(get_dead_ends(grid)))
+    for _ in range(len_rep):
         dead_ends = get_dead_ends(grid)
         if not dead_ends:
             break

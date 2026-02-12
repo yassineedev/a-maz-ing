@@ -7,6 +7,8 @@ from mazegen_algorithm import DFS, Prim
 from hex_encoder import hex_encoder
 from curses import wrapper
 import time
+from maze import Maze
+
 
 def main(stdscr) -> None:
     argv = sys.argv
@@ -14,25 +16,19 @@ def main(stdscr) -> None:
         print("Usage: python3 a_maze_ing.py <config_file>")
         sys.exit(1)
 
-
-    # ------- Mohamed --------
     config = load_config(argv[1])
     generator = MazeGenerator(config)
-    maze = generator.generate_closed_maze()
-    
+    algorithm = DFS() if config.algo == "dfs" else Prim()
+    maze_grid = Maze(config.width, config.height, generator.grid)
+    drawer = MazeDrawer(maze_grid, stdscr) 
 
-    # ------- Yassine --------
-    
-    drawer = MazeDrawer(maze, stdscr) 
-    drawer.draw()
-
-    for _ in generator.generate(Prim()):
+    for _ in generator.generate(algorithm):
         drawer.draw()
         time.sleep(0.05)
 
-    solver = MazeSolver(maze)
+    solver = MazeSolver(maze_grid)
     solution_path = solver.solve()
-    hex_encoder(maze, config, solution_path)
+    hex_encoder(maze_grid, config, solution_path)
 
     while True:
         key = stdscr.getch()
@@ -43,4 +39,4 @@ if __name__ == "__main__":
     try:
         wrapper(main)
     except Exception as e:
-        print(e)
+        print(f"[EROOR]: {e}")
