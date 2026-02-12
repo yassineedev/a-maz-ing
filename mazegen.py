@@ -24,9 +24,8 @@ class MazeGenerator:
     def __init__(self, config, algorithm):
         self.config = config
         self.algorithm = algorithm
-        
-        self.WIDTH = 10
-        self.HEIGHT = 10
+        self.WIDTH = 20
+        self.HEIGHT = 25
         self.ENTRY = (0, 0)
         self.EXIT = (9, 9)
 
@@ -51,7 +50,39 @@ class MazeGenerator:
 
         return neighbors
 
-    def generate(self):
+    def prepare_maze(self) -> None:
+        """
+        Initialize the maze grid BEFORE generation.
+        All cells are unvisited and all walls are closed.
+        Marks ENTRY and EXIT.
+        """
+        self.grid = [
+            [Cell(x, y) for x in range(self.WIDTH)]
+            for y in range(self.HEIGHT)
+        ]
+
+        # Reset walls & visited for each cell
+        for row in self.grid:
+            for cell in row:
+                cell.up = True
+                cell.down = True
+                cell.left = True
+                cell.right = True
+                cell.visited = False
+                cell.is_start = False
+                cell.is_end = False
+
+        # Mark the start and end
+        sx, sy = self.ENTRY
+        self.grid[sy][sx].is_start = True
+
+        ex, ey = self.EXIT
+        self.grid[ey][ex].is_end = True
+
+    def generate_steps(self):
+        """
+        DFS generator that yields the maze state after each cell opens.
+        """
         stack: list[Cell] = []
 
         sx, sy = self.ENTRY
@@ -72,6 +103,7 @@ class MazeGenerator:
             neighbor = random.choice(neighbors)
             neighbor.visited = True
 
+            # Remove walls
             if neighbor.x > cell.x:
                 cell.right = False
                 neighbor.left = False
@@ -87,8 +119,14 @@ class MazeGenerator:
 
             stack.append(neighbor)
 
-        ex, ey = self.EXIT
-        self.grid[ey][ex].is_end = True
+            yield self.grid
+
+    def generate_closed_maze(self):
+        """
+        Returns a maze where ALL walls are closed.
+        This is the initial state for animation.
+        """
+        self.prepare_maze()
 
         maze = Maze(self.WIDTH, self.HEIGHT, self.grid)
         return maze
