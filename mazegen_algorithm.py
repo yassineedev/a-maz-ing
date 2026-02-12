@@ -24,10 +24,15 @@ class MazeAlgorithm(ABC):
         return neighbors
 
     def remove_walls(self, a, b):
-        if a.x < b.x: a.right = b.left = False
-        elif a.x > b.x: a.left = b.right = False
-        elif a.y < b.y: a.down = b.up = False
-        elif a.y > b.y: a.up = b.down = False
+        if a.x < b.x:
+            a.right = b.left = False
+        elif a.x > b.x:
+            a.left = b.right = False
+        elif a.y < b.y:
+            a.down = b.up = False
+        elif a.y > b.y:
+            a.up = b.down = False
+
 
 # ----- this is the first algorithem ----
 class DFS(MazeAlgorithm):
@@ -50,6 +55,8 @@ class DFS(MazeAlgorithm):
             neighbor.visited = True
             stack.append(neighbor)
             yield grid
+
+
 # ----- this is the sacant algorithem ----
 class Prim(MazeAlgorithm):
     def apply(self, grid, config):
@@ -62,7 +69,7 @@ class Prim(MazeAlgorithm):
         while frontiers:
             cell, neighbor = random.choice(frontiers)
             frontiers.remove((cell, neighbor))
-            
+
             if neighbor.visited:
                 continue
 

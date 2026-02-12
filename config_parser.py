@@ -13,12 +13,20 @@ class MazeConfig:
         self.algo = "dfs"
 
 
-Mandatory_keys= {"width", "height", "entry", "exit", "output_file", "perfect"}
+Mandatory_keys = {"width", "height", "entry", "exit", "output_file", "perfect"}
 
 
 def load_config(config_file):
     config_data = MazeConfig()
-    allowed_keys = {"width", "height", "entry", "exit", "output_file", "perfect", "algo"}
+    allowed_keys = {
+        "width",
+        "height",
+        "entry",
+        "exit",
+        "output_file",
+        "perfect",
+        "algo",
+    }
 
     try:
         with open(config_file, "r") as file:
@@ -62,7 +70,7 @@ def load_config(config_file):
                             value = False
                         else:
                             raise ConfigError(
-                                f"Line {line_number}: PERFECT must be True or False. Got: '{value}'"
+                                f"Line {line_number}: PERFECT must be True or Fa gilse. Got: '{value}'"
                             )
 
                     elif key == "ALGO":
@@ -108,14 +116,10 @@ def last_check(config):
     exit_x, exit_y = config.exit
 
     if not (9 <= width <= 100):
-        raise ConfigError(
-            f"WIDTH must be between 9 and 100. Got: {width}"
-        )
+        raise ConfigError(f"WIDTH must be between 9 and 100. Got: {width}")
 
     if not (7 <= height <= 100):
-        raise ConfigError(
-            f"HEIGHT must be between 7 and 100. Got: {height}"
-        )
+        raise ConfigError(f"HEIGHT must be between 7 and 100. Got: {height}")
 
     if not (0 <= entry_x < width) or not (0 <= entry_y < height):
         raise ConfigError(
@@ -130,6 +134,4 @@ def last_check(config):
         )
 
     if config.entry == config.exit:
-        raise ConfigError(
-            "ENTRY and EXIT cannot be the same position"
-        )
+        raise ConfigError("ENTRY and EXIT cannot be the same position")

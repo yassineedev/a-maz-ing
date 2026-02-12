@@ -1,5 +1,5 @@
 import sys
-from config_parser import load_config, ConfigError
+from config_parser import load_config
 from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
 from solver import MazeSolver
@@ -20,7 +20,7 @@ def main(stdscr) -> None:
     generator = MazeGenerator(config)
     algorithm = DFS() if config.algo == "dfs" else Prim()
     maze_grid = Maze(config.width, config.height, generator.grid)
-    drawer = MazeDrawer(maze_grid, stdscr) 
+    drawer = MazeDrawer(maze_grid, stdscr)
 
     for _ in generator.generate(algorithm):
         drawer.draw()
@@ -32,8 +32,9 @@ def main(stdscr) -> None:
 
     while True:
         key = stdscr.getch()
-        if key == ord('q'):
+        if key == ord("q"):
             break
+
 
 if __name__ == "__main__":
     try:

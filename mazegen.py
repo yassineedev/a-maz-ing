@@ -9,6 +9,7 @@ class Cell:
         self.is_start = self.is_end = self.visited = False
         self.path_42 = False
 
+
 class MazeGenerator:
     def __init__(self, config):
         self.config = config
