@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+mazegen-package/__init__.py
+mazegen-package/setup.py
+mazegen_bogido.egg-info/PKG-INFO
+mazegen_bogido.egg-info/SOURCES.txt
+mazegen_bogido.egg-info/dependency_links.txt
+mazegen_bogido.egg-info/top_level.txt

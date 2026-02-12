@@ -1,94 +1,59 @@
 import random
 from maze import Maze
-
+from pattern_42 import is_pattern_42
 
 class Cell:
     def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
-
-        self.up = True
-        self.down = True
-        self.left = True
-        self.right = True
-
-        self.is_start = False
-        self.is_end = False
-        self.visited = False
-
-    def __str__(self):
-        return " " if not self.down else "_"
-
+        self.x, self.y = x, y
+        self.up = self.down = self.left = self.right = True
+        self.is_start = self.is_end = self.visited = False
+        self.path_42 = False
 
 class MazeGenerator:
-    def __init__(self, config, algorithm):
+    def __init__(self, config):
         self.config = config
-        self.algorithm = algorithm
-        
-        self.WIDTH = 10
-        self.HEIGHT = 10
-        self.ENTRY = (0, 0)
-        self.EXIT = (9, 9)
-
         self.grid = [
-            [Cell(x, y) for x in range(self.WIDTH)]
-            for y in range(self.HEIGHT)
+            [Cell(x, y) for x in range(self.config.width)]
+            for y in range(self.config.height)
         ]
 
-    def research_about_neighbor(self, cell) -> list[Cell]:
-        neighbors = []
+    def generate(self, algorithm):
+        if not self.config.width < 8 or self.config.height < 6:
+            is_pattern_42(self.grid, self.config)
+        
+        sx, sy = self.config.entry
+        self.grid[sy][sx].is_start = True
 
-        cx, cy = cell.x, cell.y
-        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+        yield from algorithm.apply(self.grid, self.config)
 
-        for dx, dy in directions:
-            nx, ny = cx + dx, cy + dy
+        if not self.config.perfect:
+            from mazegennotperfect import convert_to_imperfect_maze
+            yield from convert_to_imperfect_maze(self.grid, self.config)
 
-            if 0 <= nx < self.WIDTH and 0 <= ny < self.HEIGHT:
-                n = self.grid[ny][nx]
-                if not n.visited:
-                    neighbors.append(n)
+        ex, ey = self.config.exit
+        self.grid[ex][ey].is_end = True
+    def prepare_maze(self) -> None:
+        self.grid = [
+            [Cell(x, y) for x in range(self.config.width)]
+            for y in range(self.config.height)
+        ]
+        for row in self.grid:
+            for cell in row:
+                cell.up = True
+                cell.down = True
+                cell.left = True
+                cell.right = True
+                cell.visited = False
+                cell.is_start = False
+                cell.is_end = False
+                cell.path_42 = False
 
-        return neighbors
+        sx, sy = self.config.entry
+        self.grid[sy][sx].is_start = True
 
-    def generate(self):
-        stack: list[Cell] = []
-
-        sx, sy = self.ENTRY
-        start = self.grid[sy][sx]
-        start.visited = True
-        start.is_start = True
-
-        stack.append(start)
-
-        while stack:
-            cell = stack[-1]
-            neighbors = self.research_about_neighbor(cell)
-
-            if not neighbors:
-                stack.pop()
-                continue
-
-            neighbor = random.choice(neighbors)
-            neighbor.visited = True
-
-            if neighbor.x > cell.x:
-                cell.right = False
-                neighbor.left = False
-            elif neighbor.x < cell.x:
-                cell.left = False
-                neighbor.right = False
-            elif neighbor.y > cell.y:
-                cell.down = False
-                neighbor.up = False
-            elif neighbor.y < cell.y:
-                cell.up = False
-                neighbor.down = False
-
-            stack.append(neighbor)
-
-        ex, ey = self.EXIT
+        ex, ey = self.config.exit
         self.grid[ey][ex].is_end = True
 
-        maze = Maze(self.WIDTH, self.HEIGHT, self.grid)
-        return maze
+    def generate_closed_maze(self):
+        self.prepare_maze()
+        return Maze(self.config.width, self.config.height, self.grid)
