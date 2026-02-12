@@ -1,6 +1,7 @@
 WIDTH=20
 HEIGHT=10
 ENTRY=0,0
-EXIT=5,0
+EXIT=15,9
 OUTPUT_FILE=maze.txt
 PERFECT=False
+algo=prim
