@@ -10,6 +10,15 @@ import time
 from maze import Maze
 
 
+def call_generator(stdscr, config, algorithm):
+    generator = MazeGenerator(config)
+    maze_grid = Maze(config.width, config.height, generator.grid)
+    drawer = MazeDrawer(maze_grid, stdscr)
+    for _ in generator.generate(algorithm):
+        drawer.draw()
+        time.sleep(0.05)
+
+
 def main(stdscr) -> None:
     argv = sys.argv
     if len(argv) != 2:
@@ -24,7 +33,7 @@ def main(stdscr) -> None:
 
     for _ in generator.generate(algorithm):
         drawer.draw()
-        time.sleep(0.05)
+        time.sleep(0.04)
 
     solver = MazeSolver(maze_grid)
     solution_path = solver.solve()
@@ -32,6 +41,10 @@ def main(stdscr) -> None:
 
     while True:
         key = stdscr.getch()
+        if key == ord('t'):
+            drawer.shift_theme()
+        if key == ord("g"):
+            call_generator(stdscr, config, algorithm)
         if key == ord("q"):
             break
 
