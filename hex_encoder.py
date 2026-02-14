@@ -1,3 +1,5 @@
+from config_parser import ConfigError
+
 def get_hex_value(cell) -> str:
     value = 0
     if cell.up: value |= (1 << 0) 
@@ -25,7 +27,7 @@ def hex_encoder(maze, config, solution_path):
             exit_str = f"{config.exit[0]},{config.exit[1]}"
             maze_file.write(exit_str + "\n")
             
-            # maze_file.write(solution_path + "\n")
+            maze_file.write(solution_path + "\n")
             
     except Exception as e:
-        print(f"Error writing output file: {e}")
+        raise ConfigError(f"Error writing output file: {e}")

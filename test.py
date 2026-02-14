@@ -1,13 +1,29 @@
-from collections import deque
-q = deque()
+def get_unvisited_neighbors(grid, cell, config):
+    neighbors = []
+    cx, cy = cell.x, cell.y
 
-q.append('a')
-q.append('b')
-q.append('c')
-print("Initial queue:", q)
+    # LEFT
+    if cx > 0 and not cell.left:
+        n = grid[cy][cx - 1]
+        if not n.visited and not n.path_42:
+            neighbors.append(n)
 
-print("Elements dequeued from the queue:")
-print(q.popleft())
+    # RIGHT
+    if cx < config.width - 1 and not cell.right:
+        n = grid[cy][cx + 1]
+        if not n.visited and not n.path_42:
+            neighbors.append(n)
 
+    # UP
+    if cy > 0 and not cell.up:
+        n = grid[cy - 1][cx]
+        if not n.visited and not n.path_42:
+            neighbors.append(n)
 
-print("Queue after removing elements:", q)
+    # DOWN
+    if cy < config.height - 1 and not cell.down:
+        n = grid[cy + 1][cx]
+        if not n.visited and not n.path_42:
+            neighbors.append(n)
+
+    return neighbors

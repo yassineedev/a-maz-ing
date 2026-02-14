@@ -2,7 +2,7 @@ import sys
 from config_parser import load_config, ConfigError
 from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
-from solver import MazeSolver
+from solver import solve
 from mazegen_algorithm import DFS, Prim
 from hex_encoder import hex_encoder
 from curses import wrapper
@@ -13,8 +13,7 @@ from maze import Maze
 def main(stdscr) -> None:
     argv = sys.argv
     if len(argv) != 2:
-        print("Usage: python3 a_maze_ing.py <config_file>")
-        sys.exit(1)
+        raise ConfigError("Usage: python3 a_maze_ing.py <config_file>")
 
     config = load_config(argv[1])
     generator = MazeGenerator(config)
@@ -23,11 +22,11 @@ def main(stdscr) -> None:
     drawer = MazeDrawer(maze_grid, stdscr) 
 
     for _ in generator.generate(algorithm):
+        pass
         drawer.draw()
         time.sleep(0.05)
 
-    solver = MazeSolver(maze_grid)
-    solution_path = solver.solve()
+    solution_path = solve(maze_grid, config)
     hex_encoder(maze_grid, config, solution_path)
 
     while True:

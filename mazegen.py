@@ -11,6 +11,7 @@ class Cell:
 
 class MazeGenerator:
     def __init__(self, config):
+        # self.seed = config.seed
         self.config = config
         self.grid = [
             [Cell(x, y) for x in range(self.config.width)]
@@ -23,7 +24,7 @@ class MazeGenerator:
 
         ex, ey = self.config.exit
         self.grid[ey][ex].is_end = True
-
+        
         is_pattern_42(self.grid, self.config)
 
         yield from algorithm.apply(self.grid, self.config)
