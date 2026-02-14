@@ -28,6 +28,7 @@ def main(stdscr) -> None:
 
     solution_path = solve(maze_grid, config)
     hex_encoder(maze_grid, config, solution_path)
+    drawer.draw()
 
     while True:
         key = stdscr.getch()

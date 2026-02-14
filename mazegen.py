@@ -8,6 +8,7 @@ class Cell:
         self.up = self.down = self.left = self.right = True
         self.is_start = self.is_end = self.visited = False
         self.path_42 = False
+        self.solution_path = False
 
 class MazeGenerator:
     def __init__(self, config):

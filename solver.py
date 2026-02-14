@@ -1,5 +1,6 @@
 from collections import deque
 
+
 def get_unvisited_neighbors(grid, cell, config):
     neighbors = []
     cx, cy = cell.x, cell.y
@@ -31,11 +32,11 @@ def get_unvisited_neighbors(grid, cell, config):
     return neighbors
 
 
-
 def solve(maze, config):
     for row in maze.grid:
         for cell in row:
             cell.visited = False
+            cell.solution_path = False
 
     queue = deque()
     parent = {}
@@ -49,7 +50,7 @@ def solve(maze, config):
 
     queue.append(start)
     start.visited = True
-    parent[(start.y, start.x)] = None
+    parent[start] = None
 
     found = False
 
@@ -60,25 +61,23 @@ def solve(maze, config):
             found = True
             break
 
-        neighbors = get_unvisited_neighbors(maze.grid, current, config)
-
-        for neighbor, direction in neighbors:
+        for neighbor, direction in get_unvisited_neighbors(maze.grid, current, config):
             neighbor.visited = True
+            parent[neighbor] = current
+            move[neighbor] = direction
             queue.append(neighbor)
 
-            parent[(neighbor.y, neighbor.x)] = (current.y, current.x)
-            move[(neighbor.y, neighbor.x)] = direction
-
     if not found:
-        return ""
+        return []
 
     path = []
-    key = (end.y, end.x)
+    key = end
 
-    while parent[key] is not None:
-        path.append(move[key])
+    while key is not None:
+        key.solution_path = True
+        if parent[key] is not None:
+            path.append(move[key])
         key = parent[key]
 
     path.reverse()
-
     return path
