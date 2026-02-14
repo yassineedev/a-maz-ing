@@ -27,7 +27,7 @@ def hex_encoder(maze, config, solution_path):
             exit_str = f"{config.exit[0]},{config.exit[1]}"
             maze_file.write(exit_str + "\n")
             
-            maze_file.write(solution_path + "\n")
+            maze_file.write("".join(solution_path) + "\n")
             
     except Exception as e:
         raise ConfigError(f"Error writing output file: {e}")

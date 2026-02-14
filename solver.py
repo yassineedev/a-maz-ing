@@ -81,4 +81,4 @@ def solve(maze, config):
 
     path.reverse()
 
-    return "".join(path)
+    return path
