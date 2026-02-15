@@ -9,8 +9,9 @@ class MazeConfig:
         self.entry = None
         self.exit = None
         self.output_file = None
-        self.perfect = True
+        self.perfect = None
         self.algo = "dfs"
+        self.is_path_42 = True
 
 
 Mandatory_keys= {"width", "height", "entry", "exit", "output_file", "perfect"}
@@ -40,7 +41,7 @@ def load_config(config_file):
                 if key not in allowed_keys:
                     raise ConfigError(
                         f"Line {line_number}: Unknown key '{key}'. "
-                        f"Allowed keys: {', '.join(sorted(allowed_keys))}"
+                        f"Allowed keys: {', '.join(allowed_keys)}"
                     )
 
                 try:
@@ -107,27 +108,20 @@ def last_check(config):
     entry_x, entry_y = config.entry
     exit_x, exit_y = config.exit
 
-    if not (9 <= width <= 100):
-        raise ConfigError(
-            f"WIDTH must be between 9 and 100. Got: {width}"
-        )
+    if height < 7 or width < 9:
+        config.is_path_42 = False
+        print("i not can draw path 42 because this maze is small")
 
-    if not (7 <= height <= 100):
-        raise ConfigError(
-            f"HEIGHT must be between 7 and 100. Got: {height}"
-        )
-
+    if height > 100 or width > 100:
+        raise ConfigError("the maze is very big maz the height is 100 and maze the width is 100")
+    
     if not (0 <= entry_x < width) or not (0 <= entry_y < height):
         raise ConfigError(
-            f"ENTRY position ({entry_x},{entry_y}) is outside maze bounds "
-            f"(0..{width-1}, 0..{height-1})"
-        )
+            f"ENTRY position ({entry_x},{entry_y}) is outside maze bounds")
 
     if not (0 <= exit_x < width) or not (0 <= exit_y < height):
         raise ConfigError(
-            f"EXIT position ({exit_x},{exit_y}) is outside maze bounds "
-            f"(0..{width-1}, 0..{height-1})"
-        )
+            f"EXIT position ({exit_x},{exit_y}) is outside maze bounds")
 
     if config.entry == config.exit:
         raise ConfigError(

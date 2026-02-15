@@ -1,42 +1,25 @@
-PYTHON = python3
-MAIN = main.py
-VENV = .venv
-PIP = $(VENV)/bin/pip
-PY = $(VENV)/bin/python
-
 install:
-	$(PYTHON) -m venv $(VENV)
-	. $(VENV)/bin/activate && pip install --upgrade pip
-	@if [ -f requirements.txt ]; then \
-		. $(VENV)/bin/activate && pip install -r requirements.txt; \
-	fi
-	. $(VENV)/bin/activate && pip install flake8 mypy
+	pip install flake8 mypy
 
 run:
-	$(PY) $(MAIN)
+	python3 a_maze_ing.py config.txt
+
 
 debug:
-	$(PY) -m pdb $(MAIN)
+	python3 -m pdb a_maze_ing config.txt
 
+bild:
+	cp dist/mazegen_bogido-0.0.1-py3-none-any.whl .
+	cp dist/mazegen_bogido-0.0.1.tar.gz .
+	rm -rf dist
 clean:
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type d -name ".mypy_cache" -exec rm -rf {} +
-	find . -type d -name ".pytest_cache" -exec rm -rf {} +
-	find . -type d -name ".venv" -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
+	rm -rf __pycache__
 
 lint:
-	$(PY) -m flake8 .
-	$(PY) -m mypy . \
-		--warn-return-any \
-		--warn-unused-ignores \
-		--ignore-missing-imports \
-		--disallow-untyped-defs \
-		--check-untyped-defs
-
+	python3 -m flake8 .
+	
 lint-strict:
-	$(PY) -m flake8 .
-	$(PY) -m mypy . --strict
-
+	python3 -m flake8 .
+	python3 -m mypy . --strict
 
 .PHONY: install run debug clean lint lint-strict

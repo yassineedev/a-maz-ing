@@ -1,6 +1,0 @@
-Metadata-Version: 2.4
-Name: mazegen-bogido
-Version: 0.0.1
-Summary: this is a good maze package
-Author-email: mbougajd <alice@example.com>, yboussif <bob@example.com>
-Requires-Python: >=3.10
