@@ -8,7 +8,6 @@ class MazeDrawer:
         self.maze = maze
         self.stdscr: curses.window = stdscr
         self.th_keys = list(THEMES.keys())
-        self.animation_flag = False
         self.panel_lst = [
             "==== ",
             "1. Re-generate a new maze",
@@ -149,9 +148,3 @@ class MazeDrawer:
         self.stdscr.addstr(y - 1, 0," " * (w - 1), curses.init_pair(20))
         status = status[: w - 1]
         self.stdscr.addstr(h - 1, 0, status, curses.init_pair(20))
-
-    def on_off_animation(self):
-        self.animation_flag = not self.animation_flag
-
-    def return_animation_flag(self) -> bool:
-        return self.animation_flag
