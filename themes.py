@@ -2,6 +2,13 @@ import curses
 
 THEMES = {
     "classic": {
+        "WALL": (curses.COLOR_WHITE, -1),
+        "START": (curses.COLOR_CYAN, -1),
+        "END": (curses.COLOR_BLUE, curses.COLOR_BLUE),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_WHITE, curses.COLOR_YELLOW),
+    },
+    "ice": {
         "WALL": (curses.COLOR_RED, -1),
         "START": (curses.COLOR_GREEN, -1),
         "END": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
@@ -49,13 +56,6 @@ THEMES = {
         "END": (curses.COLOR_RED, curses.COLOR_YELLOW),
         "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
         "PATH_UP": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
-    },
-    "ice": {
-        "WALL": (curses.COLOR_WHITE, -1),
-        "START": (curses.COLOR_CYAN, -1),
-        "END": (curses.COLOR_BLUE, curses.COLOR_BLUE),
-        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
-        "PATH_UP": (curses.COLOR_WHITE, curses.COLOR_YELLOW),
     },
     "neon": {
         "WALL": (curses.COLOR_MAGENTA, -1),

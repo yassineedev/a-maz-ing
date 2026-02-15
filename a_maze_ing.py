@@ -6,17 +6,30 @@ from solver import MazeSolver
 from mazegen_algorithm import DFS, Prim
 from hex_encoder import hex_encoder
 from curses import wrapper
+import curses
 import time
 from maze import Maze
 
 
-def call_generator(stdscr, config, algorithm):
-    generator = MazeGenerator(config)
-    maze_grid = Maze(config.width, config.height, generator.grid)
-    drawer = MazeDrawer(maze_grid, stdscr)
+# ================ Golabal Variabls ========== #
+time_flag = False
+
+
+def on_off_time():
+    global time_flag
+    time_flag = not time_flag
+    return time_flag
+
+
+# ======= Regenerate Maze by pressing key '1' #
+def call_generator(stdscr, config, algorithm, generator, drawer):
+    generator.reset()
+    drawer.show_panel()
     for _ in generator.generate(algorithm):
+        global time_flag
         drawer.draw()
-        time.sleep(0.05)
+        if time_flag:
+            time.sleep(0.01)
 
 
 def main(stdscr) -> None:
@@ -30,22 +43,36 @@ def main(stdscr) -> None:
     algorithm = DFS() if config.algo == "dfs" else Prim()
     maze_grid = Maze(config.width, config.height, generator.grid)
     drawer = MazeDrawer(maze_grid, stdscr)
-
+    drawer.show_panel()
     for _ in generator.generate(algorithm):
+        global time_flag
         drawer.draw()
-        time.sleep(0.04)
+        if time_flag:
+            time.sleep(0.01)
 
     solver = MazeSolver(maze_grid)
     solution_path = solver.solve()
     hex_encoder(maze_grid, config, solution_path)
 
     while True:
+        drawer.draw()
+
         key = stdscr.getch()
-        if key == ord('t'):
+
+        if key == curses.KEY_RESIZE:
+            curses.update_lines_cols()
+            stdscr.clear()
+            drawer.draw()
+            continue
+        if key == ord("0"):
+            on_off_time()
+            stdscr.refresh()
+        if key == ord("1"):
+            call_generator(stdscr, config, algorithm, generator, drawer)
+        # elif key == ord("2")
+        elif key == ord("3"):
             drawer.shift_theme()
-        if key == ord("g"):
-            call_generator(stdscr, config, algorithm)
-        if key == ord("q"):
+        if key == ord("4"):
             break
 
 
