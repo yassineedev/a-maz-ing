@@ -74,10 +74,14 @@ def solve(maze, config):
     key = end
 
     while key is not None:
-        key.solution_path = True
+        if key != end and key != start:
+            key.solution_path = True
+
         if parent[key] is not None:
             path.append(move[key])
+
         key = parent[key]
+
 
     path.reverse()
     return path
