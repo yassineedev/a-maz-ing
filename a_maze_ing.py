@@ -2,7 +2,7 @@ import sys
 from config_parser import load_config
 from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
-from solver import MazeSolver
+from solver import solve
 from mazegen_algorithm import DFS, Prim
 from hex_encoder import hex_encoder
 from curses import wrapper
@@ -50,10 +50,6 @@ def main(stdscr) -> None:
         if time_flag:
             time.sleep(0.01)
 
-    solver = MazeSolver(maze_grid)
-    solution_path = solver.solve()
-    hex_encoder(maze_grid, config, solution_path)
-
     while True:
         drawer.draw()
 
@@ -69,7 +65,13 @@ def main(stdscr) -> None:
             stdscr.refresh()
         if key == ord("1"):
             call_generator(stdscr, config, algorithm, generator, drawer)
-        # elif key == ord("2")
+        elif key == ord("2"):
+            if not drawer.show_solution:
+                solve(maze_grid, config)
+                drawer.draw()
+                drawer.solve()  # This will animate and set show_solution to True
+            else:
+                drawer.toggle_solution()  # This will hide it
         elif key == ord("3"):
             drawer.shift_theme()
         if key == ord("4"):

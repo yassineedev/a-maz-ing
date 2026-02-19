@@ -8,6 +8,7 @@ class MazeDrawer:
         self.maze = maze
         self.stdscr: curses.window = stdscr
         self.th_keys = list(THEMES.keys())
+        self.show_solution = False
         self.panel_lst = [
             "==== ",
             "1. Re-generate a new maze",
@@ -15,7 +16,7 @@ class MazeDrawer:
             "3. Rotate maze colors",
             "4. Quit",
             "==== Bonus Panel ====",
-            "a. click 'a' to enable/disable animation"
+            "a. click 'a' to enable/disable animation",
         ]
         self.current_theme = 0
         self.panel_heigth = len(self.panel_lst) + 1
@@ -67,30 +68,72 @@ class MazeDrawer:
                             y > 0
                             and x > 0
                             and (
-                                self.maze.grid[y - 1][x].left or self.maze.grid[y][x - 1].up
+                                self.maze.grid[y - 1][x].left
+                                or self.maze.grid[y][x - 1].up
                             )
                         ):
                             has_corner = True
                         if cell.up:
-                            self.stdscr.addstr(cy, cx, "▀▀▀▀", curses.color_pair(1))
+                            self.stdscr.addstr(
+                                cy, cx, "▀▀▀▀", curses.color_pair(1))
                         elif has_corner:
-                            self.stdscr.addstr(cy, cx, "▀", curses.color_pair(1))
+                            self.stdscr.addstr(
+                                cy, cx, "▀", curses.color_pair(1))
                         if cell.is_start:
-                            self.stdscr.addstr(cy + 1, cx + 1, "██", curses.color_pair(3))
+                            self.stdscr.addstr(
+                                cy + 1, cx + 1, "██", curses.color_pair(3)
+                            )
                         if cell.is_end:
-                            self.stdscr.addstr(cy + 1, cx + 1, "██", curses.color_pair(4))
+                            self.stdscr.addstr(
+                                cy + 1, cx + 1, "██", curses.color_pair(4)
+                            )
                         if cell.path_42:
-                            self.stdscr.addstr(cy + 1, cx, "    ", curses.color_pair(4))
-                            self.stdscr.addstr(cy, cx, "    ", curses.color_pair(4))
+                            self.stdscr.addstr(
+                                cy + 1, cx, "    ", curses.color_pair(4))
+                            self.stdscr.addstr(
+                                cy, cx, "    ", curses.color_pair(4))
                             if cell.up:
-                                self.stdscr.addstr(cy, cx, "▀▀▀▀▀", curses.color_pair(5))
+                                self.stdscr.addstr(
+                                    cy, cx, "▀▀▀▀▀", curses.color_pair(5)
+                                )
+
+                        if self.show_solution and cell.solution_path:
+                            self.stdscr.addstr(
+                                cy + 1, cx + 1, "███", curses.color_pair(4)
+                            )
+                            if (
+                                y > 0
+                                and self.maze.grid[y - 1][x].solution_path
+                                and not cell.up
+                            ):
+                                self.stdscr.addstr(
+                                    cy, cx + 1, "███", curses.color_pair(4)
+                                )
+                                if cell.up:
+                                    self.stdscr.addstr(
+                                        cy, cx, "▀▀▀▀", curses.color_pair(5)
+                                    )
+                            if (
+                                x > 0
+                                and self.maze.grid[y][x - 1].solution_path
+                                and not cell.left
+                            ):
+                                self.stdscr.addstr(
+                                    cy + 1, cx, "██", curses.color_pair(4)
+                                )
+
                         if y == self.maze.height - 1:
-                            self.stdscr.addstr(cy + 2, cx, "▀▀▀▀▀", curses.color_pair(1))
+                            self.stdscr.addstr(
+                                cy + 2, cx, "▀▀▀▀▀", curses.color_pair(1)
+                            )
                         if cell.right and x == self.maze.width - 1:
-                            self.stdscr.addstr(cy, cx + 4, "█", curses.color_pair(1))
+                            self.stdscr.addstr(
+                                cy, cx + 4, "█", curses.color_pair(1))
                         if cell.left:
-                            self.stdscr.addstr(cy, cx, "█", curses.color_pair(1))
-                            self.stdscr.addstr(cy + 1, cx, "█", curses.color_pair(1))
+                            self.stdscr.addstr(
+                                cy, cx, "█", curses.color_pair(1))
+                            self.stdscr.addstr(
+                                cy + 1, cx, "█", curses.color_pair(1))
                             if x == width - 1:
                                 self.stdscr.addstr(
                                     cy + 1, cx + 4, "█", curses.color_pair(1)
@@ -105,12 +148,52 @@ class MazeDrawer:
 
         self.stdscr.refresh()
 
-    # Solve prototype
-    def solve(self) -> str:
-        pass
+    def solve(self):
+        """Animate the solution path drawing"""
 
-    def show_path(self) -> None:
-        pass
+        try:
+            for y, row in enumerate(self.maze.grid):
+                self.show_panel()
+
+                for x, cell in enumerate(row):
+                    if cell.solution_path:
+                        cy = y * 2
+                        cx = x * 4
+
+                        self.stdscr.addstr(
+                            cy + 1, cx + 1, "███", curses.color_pair(4))
+                        if (
+                            y > 0
+                            and self.maze.grid[y - 1][x].solution_path
+                            and not cell.up
+                        ):
+                            self.stdscr.addstr(
+                                cy, cx + 1, "███", curses.color_pair(4))
+                        if (
+                            x > 0
+                            and self.maze.grid[y][x - 1].solution_path
+                            and not cell.left
+                        ):
+                            self.stdscr.addstr(
+                                cy + 1, cx, "██", curses.color_pair(4))
+
+                        if cell.solution_path and not cell.left:
+                            self.stdscr.addstr(
+                                cy, cx + 1, "", curses.color_pair(5))
+                        elif cell.up and cell.solution_path:
+                            self.stdscr.addstr(
+                                cy, cx + 1, "▀▀▀", curses.color_pair(5))
+                        self.stdscr.refresh()
+                        curses.napms(30)
+
+        except Exception:
+            pass
+        self.show_solution = True
+
+    def toggle_solution(self):
+        """Toggle the solution path visibility"""
+        self.show_solution = not self.show_solution
+        self.draw()
 
     def shift_theme(self, random_theme=False):
         if random_theme:
@@ -134,17 +217,3 @@ class MazeDrawer:
             except curses.error:
                 pass
         self.stdscr.refresh()
-
-    def show_info_panel(self):
-        h, w = self.stdscr.getmaxyx()
-        curses.init_pair(20, curses.COLOR_BLACK, curses.COLOR_WHITE)
-        status = (
-            f" MAZE {self.maze.width}x{self.maze.height} | ",
-            "Algo: DFS | ",
-            "Theme: theme x | ",
-            f"Start: {self.maze.start}  |  "
-            f"End: {self.maze.end} "
-        )
-        self.stdscr.addstr(y - 1, 0," " * (w - 1), curses.init_pair(20))
-        status = status[: w - 1]
-        self.stdscr.addstr(h - 1, 0, status, curses.init_pair(20))

@@ -34,7 +34,9 @@ class MazeGenerator:
             yield from convert_to_imperfect_maze(self.grid, self.config)
 
     def reset(self):
-        """Restores the grid to its initial state (all walls up, no one visited)."""
+        """
+        Restores the grid to its initial state (all walls up, no one visited)
+        """
         for row in self.grid:
             for cell in row:
                 cell.visited = False
@@ -42,6 +44,6 @@ class MazeGenerator:
                 cell.down = True
                 cell.left = True
                 cell.right = True
-                cell.path_42 = False # Clear the old solution path
+                cell.path_42 = False
                 cell.is_start = False
                 cell.is_end = False

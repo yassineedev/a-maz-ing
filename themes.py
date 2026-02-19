@@ -7,6 +7,7 @@ THEMES = {
         "END": (curses.COLOR_BLUE, curses.COLOR_BLUE),
         "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
         "PATH_UP": (curses.COLOR_WHITE, curses.COLOR_YELLOW),
+        "NOT_PATH_UP": (curses.COLOR_BLUE, curses.COLOR_YELLOW),
     },
     "ice": {
         "WALL": (curses.COLOR_RED, -1),
