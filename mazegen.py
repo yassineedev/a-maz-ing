@@ -8,6 +8,7 @@ class Cell:
         self.up = self.down = self.left = self.right = True
         self.is_start = self.is_end = self.visited = False
         self.path_42 = False
+        self.solution_path = False
 
 
 class MazeGenerator:
@@ -31,3 +32,18 @@ class MazeGenerator:
 
         if not self.config.perfect:
             yield from convert_to_imperfect_maze(self.grid, self.config)
+
+    def reset(self):
+        """
+        Restores the grid to its initial state (all walls up, no one visited)
+        """
+        for row in self.grid:
+            for cell in row:
+                cell.visited = False
+                cell.up = True
+                cell.down = True
+                cell.left = True
+                cell.right = True
+                cell.path_42 = False
+                cell.is_start = False
+                cell.is_end = False

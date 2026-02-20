@@ -1,0 +1,88 @@
+import curses
+
+THEMES = {
+    "classic": {
+        "WALL": (curses.COLOR_WHITE, -1),
+        "START": (curses.COLOR_CYAN, -1),
+        "END": (curses.COLOR_BLUE, curses.COLOR_BLUE),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_WHITE, curses.COLOR_YELLOW),
+    },
+    "blizzard_red": {
+        "WALL": (curses.COLOR_RED, -1),
+        "START": (curses.COLOR_MAGENTA, -1),
+        "END": (curses.COLOR_CYAN, curses.COLOR_CYAN),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_RED, curses.COLOR_YELLOW),
+    },
+    "ocean": {
+        "WALL": (curses.COLOR_CYAN, -1),
+        "START": (curses.COLOR_BLUE, -1),
+        "END": (curses.COLOR_WHITE, curses.COLOR_WHITE),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_CYAN, curses.COLOR_YELLOW),
+    },
+    "forest": {
+        "WALL": (curses.COLOR_GREEN, -1),
+        "START": (curses.COLOR_MAGENTA, -1),
+        "END": (curses.COLOR_CYAN, curses.COLOR_CYAN),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_GREEN, curses.COLOR_YELLOW),
+    },
+    "lava": {
+        "WALL": (curses.COLOR_RED, -1),
+        "START": (curses.COLOR_BLUE, -1),
+        "END": (curses.COLOR_MAGENTA, curses.COLOR_MAGENTA),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_RED, curses.COLOR_YELLOW),
+    },
+    "midnight": {
+        "WALL": (curses.COLOR_BLACK, -1),
+        "START": (curses.COLOR_CYAN, -1),
+        "END": (curses.COLOR_MAGENTA, curses.COLOR_MAGENTA),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_BLACK, curses.COLOR_YELLOW),
+    },
+    "sunset": {
+        "WALL": (curses.COLOR_MAGENTA, -1),
+        "START": (curses.COLOR_BLUE, -1),
+        "END": (curses.COLOR_CYAN, curses.COLOR_CYAN),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_MAGENTA, curses.COLOR_YELLOW),
+    },
+    "desert": {
+        "WALL": (curses.COLOR_YELLOW, -1),
+        "START": (curses.COLOR_MAGENTA, -1),
+        "END": (curses.COLOR_CYAN, curses.COLOR_CYAN),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+    },
+    "neon": {
+        "WALL": (curses.COLOR_MAGENTA, -1),
+        "START": (curses.COLOR_CYAN, -1),
+        "END": (curses.COLOR_BLUE, curses.COLOR_BLUE),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_MAGENTA, curses.COLOR_YELLOW),
+    },
+    "shadow": {
+        "WALL": (curses.COLOR_BLACK, -1),
+        "START": (curses.COLOR_CYAN, -1),
+        "END": (curses.COLOR_MAGENTA, curses.COLOR_MAGENTA),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_BLACK, curses.COLOR_YELLOW),
+    },
+    "candy": {
+        "WALL": (curses.COLOR_MAGENTA, -1),
+        "START": (curses.COLOR_BLUE, -1),
+        "END": (curses.COLOR_MAGENTA, curses.COLOR_MAGENTA),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_MAGENTA, curses.COLOR_YELLOW),
+    },
+    "matrix": {
+        "WALL": (curses.COLOR_GREEN, -1),
+        "START": (curses.COLOR_BLACK, -1),
+        "END": (curses.COLOR_CYAN, curses.COLOR_CYAN),
+        "PATH": (curses.COLOR_YELLOW, curses.COLOR_YELLOW),
+        "PATH_UP": (curses.COLOR_GREEN, curses.COLOR_YELLOW),
+    },
+}
