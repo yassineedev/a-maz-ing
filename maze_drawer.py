@@ -258,33 +258,29 @@ class MazeDrawer:
 
     def show_banner(self) -> None:
         """Display a dynamic banner with maze status and current settings."""
-        # Maze info
         maze_info = f"Maze: {self.maze.width}x{self.maze.height}"
         theme_info = f"Theme: {self.th_keys[self.current_theme]}"
-        solution_info = "Solution: ON" if self.show_solution else "Solution: OFF"
+        solution_info = (
+            "Solution: ON" if self.show_solution else "Solution: OFF"
+        )
 
-        # Optional: player info (if tracking a player)
-        player_info = ""
-        steps_info = ""
-        if hasattr(self, "player_y") and hasattr(self, "player_x"):
-            player_info = f"Player: ({self.player_y},{self.player_x})"
-        if hasattr(self, "steps"):
-            steps_info = f"Steps: {self.steps}"
-
-        # Combine all info
         banner_parts = [
-            maze_info, theme_info,
-            solution_info, player_info, steps_info
+            maze_info,
+            theme_info,
+            solution_info,
         ]
-        # Only include non-empty parts
         banner_text = " | ".join(part for part in banner_parts if part)
 
-        # Banner position (one line above panel)
         panel_y = self.terminal_h - self.panel_heigth
         banner_y = max(panel_y - 1, 0)
         banner_x = max((self.terminal_w - len(banner_text)) // 2, 0)
 
         try:
-            self.stdscr.addstr(banner_y, banner_x, banner_text, curses.A_REVERSE)
+            self.stdscr.addstr(
+                banner_y,
+                banner_x,
+                banner_text,
+                curses.A_REVERSE,
+            )
         except curses.error:
-            pass  # silently ignore if terminal too small
+            pass
