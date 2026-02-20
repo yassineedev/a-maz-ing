@@ -4,7 +4,7 @@ from mazegen import MazeGenerator
 from maze_drawer import MazeDrawer
 from solver import solve
 from mazegen_algorithm import DFS, Prim
-# from hex_encoder import hex_encoder
+from hex_encoder import hex_encoder
 from curses import wrapper
 import curses
 import time
@@ -43,6 +43,8 @@ def show_error(stdscr: curses.window, message: str) -> None:
 
 def call_generator(
     stdscr: curses.window,
+    maze_grid,
+    config,
     algorithm,
     generator: MazeGenerator,
     drawer: MazeDrawer,
@@ -57,7 +59,8 @@ def call_generator(
             drawer.draw()
             if time_flag:
                 time.sleep(0.01)
-
+        solution = solve(maze_grid, config)
+        hex_encoder(maze_grid, config, solution)
         drawer.regenerate_solver_fixer()
 
     except curses.error:
@@ -97,6 +100,8 @@ def main(stdscr: curses.window) -> None:
             drawer.draw()
             if time_flag:
                 time.sleep(0.01)
+        solution = solve(maze_grid, config)
+        hex_encoder(maze_grid, config, solution)
     except Exception as e:
         show_error(stdscr, f"Initial generation error: {e}")
         return
@@ -115,7 +120,8 @@ def main(stdscr: curses.window) -> None:
                 on_off_time()
 
             elif key == ord("1"):
-                call_generator(stdscr, algorithm, generator, drawer)
+                call_generator(
+                    stdscr, maze_grid, config, algorithm, generator, drawer)
 
             elif key == ord("2"):
                 if not drawer.show_solution:
