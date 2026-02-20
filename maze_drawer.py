@@ -1,22 +1,25 @@
 from mazegen import Cell
+from maze import Maze
 from themes import THEMES
 import curses
 
 
 class MazeDrawer:
-    def __init__(self, maze, stdscr):
+    def __init__(self, maze: Maze, stdscr: "curses.window") -> None:
+        """ initialize base atrrubites of the drawing class """
         self.maze = maze
         self.stdscr: curses.window = stdscr
         self.th_keys = list(THEMES.keys())
         self.show_solution = False
         self.panel_lst = [
-            "==== ",
+            "==== A-Maz-ing ====",
             "1. Re-generate a new maze",
             "2. Show/Hide path from entry to exit",
             "3. Rotate maze colors",
-            "4. Quit",
-            "==== Bonus Panel ====",
-            "a. click 'a' to enable/disable animation",
+            "4. click '4' to enable/disable animation",
+            "5. Quit",
+            "",
+            "Select option (1-5): "
         ]
         self.current_theme = 0
         self.panel_heigth = len(self.panel_lst) + 1
@@ -24,7 +27,8 @@ class MazeDrawer:
         curses.use_default_colors()
         self.theme_setter()
 
-    def theme_setter(self):
+    def theme_setter(self) -> None:
+        """theme id setter"""
         theme_name = self.th_keys[self.current_theme]
         data = THEMES[theme_name]
         curses.init_pair(1, *data["WALL"])
@@ -33,7 +37,8 @@ class MazeDrawer:
         curses.init_pair(4, *data["PATH"])
         curses.init_pair(5, *data["PATH_UP"])
 
-    def draw(self):
+    def draw(self) -> None:
+        """ Method to Draw the maze """
         self.stdscr.clear()
         height = len(self.maze.grid)
         width = len(self.maze.grid[0]) if height > 0 else 0
@@ -81,11 +86,11 @@ class MazeDrawer:
                                 cy, cx, "▀", curses.color_pair(1))
                         if cell.is_start:
                             self.stdscr.addstr(
-                                cy + 1, cx + 1, "██", curses.color_pair(3)
+                                cy + 1, cx + 1, "██", curses.color_pair(2)
                             )
                         if cell.is_end:
                             self.stdscr.addstr(
-                                cy + 1, cx + 1, "██", curses.color_pair(4)
+                                cy + 1, cx + 1, "██", curses.color_pair(3)
                             )
                         if cell.path_42:
                             self.stdscr.addstr(
@@ -101,6 +106,10 @@ class MazeDrawer:
                             self.stdscr.addstr(
                                 cy + 1, cx + 1, "███", curses.color_pair(4)
                             )
+                            if cell.is_start:
+                                self.stdscr.addstr(
+                                    cy + 1, cx + 1, "██", curses.color_pair(2)
+                                )
                             if (
                                 y > 0
                                 and self.maze.grid[y - 1][x].solution_path
@@ -120,6 +129,10 @@ class MazeDrawer:
                             ):
                                 self.stdscr.addstr(
                                     cy + 1, cx, "██", curses.color_pair(4)
+                                )
+                            if cell.is_end:
+                                self.stdscr.addstr(
+                                    cy + 1, cx + 1, "██", curses.color_pair(3)
                                 )
 
                         if y == self.maze.height - 1:
@@ -145,12 +158,12 @@ class MazeDrawer:
                                 )
             except Exception:
                 pass
-
+        self.show_banner()
+        self.show_panel()
         self.stdscr.refresh()
 
-    def solve(self):
+    def solve(self) -> None:
         """Animate the solution path drawing"""
-
         try:
             for y, row in enumerate(self.maze.grid):
                 self.show_panel()
@@ -190,30 +203,88 @@ class MazeDrawer:
             pass
         self.show_solution = True
 
-    def toggle_solution(self):
+    def toggle_solution(self) -> None:
         """Toggle the solution path visibility"""
         self.show_solution = not self.show_solution
         self.draw()
 
-    def shift_theme(self, random_theme=False):
-        if random_theme:
-            import random
-
-            self.current_theme = random.randint(0, len(self.th_keys) - 1)
-        else:
-            self.current_theme = (self.current_theme + 1) % len(self.th_keys)
+    def shift_theme(self) -> None:
+        """ changing theme colors by using a dict as a source """
+        self.current_theme = (self.current_theme + 1) % len(self.th_keys)
 
         self.theme_setter()
         self.draw()
 
-    def show_panel(self):
+    def show_panel(self) -> None:
+        """ Show pnael of options """
         self.terminal_h, self.terminal_w = self.stdscr.getmaxyx()
+        maze_end_y = (len(self.maze.grid) * 2) + 1
         panel_y = self.terminal_h - self.panel_heigth
-        for i, item in enumerate(self.panel_lst):
-            if i >= self.panel_heigth - 1:
-                break
+        if panel_y <= maze_end_y:
             try:
-                self.stdscr.addstr(panel_y + 1 + i, 2, item)
+                self.stdscr.addstr(
+                    self.terminal_h - 1,
+                    2,
+                    "!! No space left for menu !!",
+                    curses.A_REVERSE,
+                )
             except curses.error:
                 pass
+        else:
+            for i, item in enumerate(self.panel_lst):
+                if i >= self.panel_heigth - 1:
+                    break
+                try:
+                    self.stdscr.addstr(panel_y + 1 + i, 2, item)
+                except curses.error:
+                    pass
+        last_index = len(self.panel_lst) - 1
+        last_line_y = panel_y + 1 + last_index
+        last_line_text = self.panel_lst[last_index]
+
+        cursor_x = 2 + len(last_line_text)
+
+        try:
+            self.stdscr.move(last_line_y, cursor_x)
+        except curses.error:
+            pass
         self.stdscr.refresh()
+
+    def regenerate_solver_fixer(self) -> None:
+        "fixing solver path showing"
+        if self.show_solution is True:
+            self.show_solution = False
+            self.draw()
+
+    def show_banner(self) -> None:
+        """Display a dynamic banner with maze status and current settings."""
+        # Maze info
+        maze_info = f"Maze: {self.maze.width}x{self.maze.height}"
+        theme_info = f"Theme: {self.th_keys[self.current_theme]}"
+        solution_info = "Solution: ON" if self.show_solution else "Solution: OFF"
+
+        # Optional: player info (if tracking a player)
+        player_info = ""
+        steps_info = ""
+        if hasattr(self, "player_y") and hasattr(self, "player_x"):
+            player_info = f"Player: ({self.player_y},{self.player_x})"
+        if hasattr(self, "steps"):
+            steps_info = f"Steps: {self.steps}"
+
+        # Combine all info
+        banner_parts = [
+            maze_info, theme_info,
+            solution_info, player_info, steps_info
+        ]
+        # Only include non-empty parts
+        banner_text = " | ".join(part for part in banner_parts if part)
+
+        # Banner position (one line above panel)
+        panel_y = self.terminal_h - self.panel_heigth
+        banner_y = max(panel_y - 1, 0)
+        banner_x = max((self.terminal_w - len(banner_text)) // 2, 0)
+
+        try:
+            self.stdscr.addstr(banner_y, banner_x, banner_text, curses.A_REVERSE)
+        except curses.error:
+            pass  # silently ignore if terminal too small
